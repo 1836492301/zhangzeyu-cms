@@ -2,8 +2,11 @@ package com.zhangzeyu.cms.controller;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +21,7 @@ import com.zhangzeyu.cms.service.ArticleService;
 import com.zhangzeyu.cms.service.ComplainService;
 import com.zhangzeyu.cms.service.UserService;
 import com.zhangzeyu.cms.vo.ComplainVO;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 
 
@@ -28,7 +32,9 @@ public class AdminController {
 	private UserService userService;
 	@Resource
 	private ArticleService articleService;
-
+	@SuppressWarnings("rawtypes")
+	@Autowired
+	private KafkaTemplate<String, String> kafka;
 	@Resource
 	private ComplainService complainService;
 	
@@ -78,6 +84,10 @@ public class AdminController {
 	@ResponseBody
 	@PostMapping("article/update")
 	public boolean update(ArticleWithBLOBs article) {
+		ArticleWithBLOBs aaa = articleService.selectByPrimaryKey(article.getId());
+		aaa.setTitle("add"+aaa.getTitle());
+		String artic = JSON.toJSONString(aaa);
+		kafka.send("article", artic);
 		return articleService.updateByPrimaryKeySelective(article)> 0;
 	}
 	

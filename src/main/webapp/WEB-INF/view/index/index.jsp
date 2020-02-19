@@ -54,9 +54,9 @@ li {
 
 <style type="text/css">
 .ex {
-	white-space: nowrap; 
-	overflow: hidden; 
-	text-overflow: ellipsis; 
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 </style>
 </head>
@@ -66,12 +66,13 @@ li {
 		<div class="row" style="height: 34px; background-color: #222222">
 			<a href="#"><font color="#FFFFFF" size="3px">下载APP &nbsp;</font></a>
 			<div style="left: -8px">
-			   <c:if test="${null!=sessionScope.user}">
-			          <font style="color: white">登录人：${sessionScope.user.username },<a href="/passport/logout">註銷</a>
-			      </font>
-			    </c:if>
-			   <c:if test="${null==sessionScope.user}">
-				<a href="/passport/login"> 登录</a>|<a href="/passport/reg"> 注册</a>
+				<c:if test="${null!=sessionScope.user}">
+					<font style="color: white">登录人：${sessionScope.user.username },<a
+						href="/passport/logout">註銷</a>
+					</font>
+				</c:if>
+				<c:if test="${null==sessionScope.user}">
+					<a href="/passport/login"> 登录</a>|<a href="/passport/reg"> 注册</a>
 				</c:if>
 			</div>
 		</div>
@@ -79,8 +80,9 @@ li {
 	<div class="container" style="margin-top: 5px">
 		<div class="row">
 			<!-- 左侧栏目 -->
-			<div class="col-md-2" style="height: 550px ;"  >
-				<img alt="" src="/resource/images/11.jpg" style="height: 100px;width: 100px;;">
+			<div class="col-md-2" style="height: 550px;">
+				<img alt="" src="/resource/images/11.jpg"
+					style="height: 100px; width: 100px;">
 				<ul class="list-group">
 					<li class="channel-item ${article.channelId==null?"active":"" }" ><a
 						href="/">推荐</a></li>
@@ -94,6 +96,17 @@ li {
 				</ul>
 			</div>
 			<div class="col-md-7">
+			<form action="/article/seach">
+				<div class="input-group mb-3">
+					<input type="text" class="form-control"
+						placeholder="用es搜索" name="title" value="${title}"
+						aria-label="Recipient's username" aria-describedby="button-addon2">
+					<div class="input-group-append">
+						<button class="btn btn-outline-secondary" 
+							id="button-addon2">查询</button>
+					</div>
+				</div>
+			</form>
 				<!--轮播图-->
 				<c:if test="${null==article.channelId }">
 					<div>
@@ -157,10 +170,13 @@ li {
 				<div>
 					<c:forEach items="${info.list}" var="a">
 						<div class="media">
-							<a href="/article?id=${a.id}" target="_blank"><img src="/pic/${a.picture }" class="mr-3" alt="..."
+							<a href="/article?id=${a.id}" target="_blank"><img
+								src="/pic/${a.picture }" class="mr-3" alt="..."
 								style="width: 156px; height: 101.8px"></a>
 							<div class="media-body">
-								<h5 class="mt-0"><a href="/article?id=${a.id}" target="_blank">${a.title }</a></h5>
+								<h5 class="mt-0">
+									<a href="/article?id=${a.id}" target="_blank">${a.title }</a>
+								</h5>
 								<h5 style="margin-top: 5px">${a.user.username}
 									<fmt:formatDate value="${a.created}"
 										pattern="yyyy-MM-dd HH:mm:ss" />
@@ -181,9 +197,13 @@ li {
 					<c:forEach items="${lastInfo.list }" var="last">
 						<div class="class-body">
 							<div class="media">
-								<a href="/article?id=${last.id}" target="_blank"><img src="/pic/${last.picture }" class="mr-3" alt="..." style="height: 60px;width: 60px"></a>
+								<a href="/article?id=${last.id}" target="_blank"><img
+									src="/pic/${last.picture }" class="mr-3" alt="..."
+									style="height: 60px; width: 60px"></a>
 								<div class="media-body">
-								      <h6><a href="/article?id=${last.id}" target="_blank">${last.title }</a></h6>
+									<h6>
+										<a href="/article?id=${last.id}" target="_blank">${last.title }</a>
+									</h6>
 								</div>
 							</div>
 						</div>
@@ -201,11 +221,12 @@ li {
 	</div>
 	<script type="text/javascript">
 		function goPage(page) {
-              var  channelId='${article.channelId}';
-              var  categoryId='${article.categoryId}';
-              
-			location.href = "?channelId="+channelId+"&categoryId="+categoryId+"&page="
-					+ page;
+			var channelId = '${article.channelId}';
+			var categoryId = '${article.categoryId}';
+			var title = ${title}
+
+			location.href = "?channelId=" + channelId + "&categoryId="
+					+ categoryId + "&page=" + page+ "&title=" + title;
 
 		}
 	</script>

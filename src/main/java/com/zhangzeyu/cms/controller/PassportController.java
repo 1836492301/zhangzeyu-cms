@@ -1,6 +1,7 @@
 package com.zhangzeyu.cms.controller;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -31,15 +32,7 @@ public class PassportController {
 
 	}
 	
-
-	/**
-	 * 	登录
-	 * @param model
-	 * @param user
-	 * @param session
-	 * @param response
-	 * @return
-	 */
+	
 	@PostMapping("login")
 	public String login(Model model,User user,HttpSession session,HttpServletResponse response) {
 		

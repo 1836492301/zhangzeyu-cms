@@ -2,11 +2,18 @@ package com.zhangzeyu.cms.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+
+@Document(indexName="cms-article",type="article") 
 public class Article implements Serializable {
 	private static final long serialVersionUID = 1L;
-
+	@Id
 	private Integer id;
-
+	@Field(index=true,analyzer="ik_smart",store=true,searchAnalyzer="ik_smart",type = FieldType.text)
     private String title;
 
     private String picture;
@@ -223,6 +230,15 @@ public class Article implements Serializable {
 		} else if (!title.equals(other.title))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Article [id=" + id + ", title=" + title + ", picture=" + picture + ", channelId=" + channelId
+				+ ", categoryId=" + categoryId + ", userId=" + userId + ", user=" + user + ", channel=" + channel
+				+ ", category=" + category + ", hits=" + hits + ", hot=" + hot + ", status=" + status + ", deleted="
+				+ deleted + ", created=" + created + ", updated=" + updated + ", contentType=" + contentType
+				+ ", keywords=" + keywords + ", original=" + original + ", complainNum=" + complainNum + "]";
 	}
     
     

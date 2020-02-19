@@ -24,10 +24,12 @@ import com.zhangzeyu.cms.domain.ArticleWithBLOBs;
 import com.zhangzeyu.cms.domain.Category;
 import com.zhangzeyu.cms.domain.Channel;
 import com.zhangzeyu.cms.domain.Comment;
+import com.zhangzeyu.cms.domain.Shoucang;
 import com.zhangzeyu.cms.domain.User;
 import com.zhangzeyu.cms.service.ArticleService;
 import com.zhangzeyu.cms.service.ChannelService;
 import com.zhangzeyu.cms.service.CommentService;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 @RequestMapping("my")
@@ -100,6 +102,10 @@ public class MyController {
 		return "my/article/articles";
 		
 	}
+	
+	
+	
+	
 	@ResponseBody
 	@PostMapping("article/publish")
 	public boolean publish( MultipartFile file, ArticleWithBLOBs article,HttpServletRequest request) throws IllegalStateException, IOException {
@@ -123,5 +129,6 @@ public class MyController {
 		return articleService.insertSelective(article)>0;
 		
 	}
+	
 	
 }

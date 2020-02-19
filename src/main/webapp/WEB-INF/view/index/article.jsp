@@ -13,13 +13,25 @@
 <link href="/resource/css/bootstrap.css" rel="stylesheet">
 
 <script type="text/javascript">
-
+function shoucang(text){
+	
+	var text='${article.title}'
+	var url="http:localhost:90/article?id=20";
+	 $.post("/shou/add",{text:text,url:url},function(flag){
+		  if(flag){
+			  alert("操作成功");
+		  }else{
+			  alert("操作失败");
+		  }
+	  })
+}
 </script>
 </head>
+
 <body>
 	<div class="container">
-		<h1 align="center">${article.title }</h1>
-		<span style="float: right"><a href="/complain?id=${article.id }">举报</a></span>
+		<h1 align="center">${article.title }</h1><input type="button" value="收藏" onclick="shoucang()">
+		<span style="float: right"><a href="/complain?id=${article.id }">举报</a></span> 
 
 		<h3>${a.user.username}
 			<fmt:formatDate value="${article.created }"
@@ -49,4 +61,5 @@
 		</div>
 
 	</div>
+	
 </html>

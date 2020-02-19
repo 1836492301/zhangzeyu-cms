@@ -10,6 +10,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +44,10 @@ public class IndexController {
 	@Resource
 	private ArticleService articleService;
 	
+	@SuppressWarnings("rawtypes")
+	@Autowired
+	private RedisTemplate redis;
+	
 	@Resource
 	private SlideService slideService;
 	
@@ -58,17 +64,30 @@ public class IndexController {
 				List<Channel> channels = channelService.selects();
 				model.addAttribute("channels", channels);
 				
-				
+				//*****************热点文章
 		if(null==article.getChannelId()) {
+			List<Article> list = redis.opsForList().range("hot_article", 0, -1);
+			if(list==null||list.size()==0) {
+				List<Slide> slides = slideService.selects();
+				model.addAttribute("slides", slides);
+				
+				Article a2 = new Article();
+				a2.setHot(1);
+				a2.setStatus(1);
+				PageInfo<Article> info = articleService.selects(a2, page, pageSize);	
+				redis.opsForList().leftPushAll("hot_article", info.getList().toArray());
+//				redis.expire(key, timeout, unit)
+				System.err.println("从mysql中查询了最新文章。。。保存到了redis中，有效期5分钟");
+				model.addAttribute("info", info);
+			}else {
+				List<Slide> slides = slideService.selects();
+				model.addAttribute("slides", slides);
+				System.err.println("从redis中查询了最新文章。。。有效期5分钟");
+				PageInfo<Article> lastInfo = new PageInfo<>(list);
+				model.addAttribute("info", lastInfo);
+			}
 		
-			List<Slide> slides = slideService.selects();
-			model.addAttribute("slides", slides);
 			
-			Article a2 = new Article();
-			a2.setHot(1);
-			a2.setStatus(1);
-			PageInfo<Article> info = articleService.selects(a2, page, pageSize);	
-			model.addAttribute("info", info);
 		}
 		
 		if(null!=article.getChannelId()) {
@@ -87,8 +106,19 @@ public class IndexController {
 		Article last = new Article();
 		last.setStatus(1);
 		
-		PageInfo<Article> lastInfo = articleService.selects(last, 1, 5);
-		model.addAttribute("lastInfo", lastInfo);
+		//优化
+		List<Article> list = redis.opsForList().range("new_article", 0, -1);
+		if(list==null||list.size()==0) {
+			PageInfo<Article> lastInfo = articleService.selects(last, 1, 5);
+			redis.opsForList().leftPushAll("new_article", lastInfo.getList().toArray());
+			model.addAttribute("lastInfo", lastInfo);
+		}else {
+			PageInfo<Article> lastInfo = new PageInfo<>(list);
+			model.addAttribute("lastInfo", lastInfo);
+					
+		}
+		
+		
 		
 		
 	
